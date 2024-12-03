@@ -1,6 +1,9 @@
 package ar.com.l_airline.gateway_microservice.filter;
 
+import ar.com.l_airline.gateway_microservice.exception_handler.custom_exceptions.AccessDeniedException;
+import ar.com.l_airline.gateway_microservice.exception_handler.custom_exceptions.InvalidTokenException;
 import ar.com.l_airline.gateway_microservice.util.JwtUtil;
+import io.jsonwebtoken.Jwt;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -24,20 +27,23 @@ public class AuthenticationFilter  extends AbstractGatewayFilterFactory<Authenti
         return ((exchange, chain) -> {
             if (validator.isSecured.test(exchange.getRequest())){
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
-                    throw new RuntimeException("Vos no tenés el header en orden.");
+                    throw new InvalidTokenException();
                 }
 
                 String authenticationHeader = exchange.getRequest()
                         .getHeaders()
                         .get(org.springframework.http.HttpHeaders.AUTHORIZATION)
                         .get(0);
+
                 if (authenticationHeader != null && authenticationHeader.startsWith("Bearer ")){
                     authenticationHeader = authenticationHeader.substring(7);
+
+
                 }
                 try {
                     jwt.validateToken(authenticationHeader);
                 }catch (Exception e){
-                    throw new RuntimeException("No tenés acceso, maestro. Andá pa' 'lla.");
+                    throw new AccessDeniedException();
                 }
             }
             return chain.filter(exchange);

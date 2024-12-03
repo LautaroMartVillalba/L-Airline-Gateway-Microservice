@@ -23,5 +23,4 @@ public class JwtUtil {
         Jwts.parser().verifyWith(getSingKey()).build().parseSignedClaims(token).getPayload();
     }
 
-
 }
