@@ -1,5 +1,6 @@
 package ar.com.l_airline.gateway_microservice.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -21,6 +22,13 @@ public class JwtUtil {
 
     public void validateToken(String token) {
         Jwts.parser().verifyWith(getSingKey()).build().parseSignedClaims(token).getPayload();
+    }
+
+    public boolean isAdmin(String token){
+        Claims claims = Jwts.parser().verifyWith(getSingKey()).build().parseSignedClaims(token).getPayload();
+
+        String role = (String) claims.get("role");
+        return role.matches("ADMIN");
     }
 
 }
