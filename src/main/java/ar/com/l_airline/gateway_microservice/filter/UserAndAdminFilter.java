@@ -1,9 +1,7 @@
 package ar.com.l_airline.gateway_microservice.filter;
 
-import ar.com.l_airline.gateway_microservice.exception_handler.custom_exceptions.AccessDeniedException;
 import ar.com.l_airline.gateway_microservice.exception_handler.custom_exceptions.InvalidTokenException;
 import ar.com.l_airline.gateway_microservice.util.JwtUtil;
-import io.jsonwebtoken.Jwt;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -11,14 +9,14 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthenticationFilter  extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
+public class UserAndAdminFilter extends AbstractGatewayFilterFactory<UserAndAdminFilter.Config> {
 
     @Autowired
     private RouteValidator validator;
     @Autowired
     private JwtUtil jwt;
 
-    public AuthenticationFilter(){
+    public UserAndAdminFilter(){
         super(Config.class);
     }
 
@@ -37,13 +35,12 @@ public class AuthenticationFilter  extends AbstractGatewayFilterFactory<Authenti
 
                 if (authenticationHeader != null && authenticationHeader.startsWith("Bearer ")){
                     authenticationHeader = authenticationHeader.substring(7);
-
-
                 }
+
                 try {
                     jwt.validateToken(authenticationHeader);
                 }catch (Exception e){
-                    throw new AccessDeniedException();
+                    throw new InvalidTokenException();
                 }
             }
             return chain.filter(exchange);
