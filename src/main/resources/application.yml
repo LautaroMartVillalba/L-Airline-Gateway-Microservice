@@ -1,0 +1,90 @@
+spring:
+  main:
+    web-application-type: reactive
+  cloud:
+    vault:
+      host: vault-custom
+      port: 8200
+      scheme: http
+      token: ${TOKEN}
+      authentication: TOKEN
+      kv:
+        backend: kv
+        default-context: database
+        application-name: database
+        enabled: true
+    loadbalancer:
+      ribbon:
+        enabled: false
+    gateway:
+      routes:
+#        Hotel microservice (for admins)
+        - id: hotel-microservice-admins
+          uri: lb://MICROSERVICE-HOTEL
+          predicates:
+            - Path=/hotel/insert, /hotel/delete, /hotel/update
+          filters:
+          - AdminFilter
+
+#        Hotel microservice (for users and admins)
+        - id: hotel-microservice-public
+          uri: lb://MICROSERVICE-HOTEL
+          predicates:
+            - Path=/hotel/byId, /hotel/byName, /hotel/byCity, /hotel/byRoom, /hotel/byPrice
+          filters:
+            - UserAndAdminFilter
+
+#        Flight microservice (for admins)
+        - id: flight-microservice-admins
+          uri: lb://MICROSERVICE-FLIGHT
+          predicates:
+            - Path=/flight/insert, /flight/delete, /flight/update
+          filters:
+            - AdminFilter
+
+#        Flight microservice (for users and admins)
+        - id: flight-microservice-public
+          uri: lb://MICROSERVICE-FLIGHT
+          predicates:
+            - Path=/flight/byId, /flight/byAirline, /flight/, /flight/byDestiny, /flight/bySchedule, /flight/byPrice
+          filters:
+            - UserAndAdminFilter
+
+#        User-JWT microservice (for admins)
+        - id: microservice-user-jwt-admins
+          uri: http://jwt-user-cont:9000
+          predicates:
+            - Path=/user/byId, /user/byEmail, /user/byName, /user/delete
+          filters:
+            - AdminFilter
+
+#        User-JWT microservice (for users and admins)
+        - id: microservice-user-jwt-public
+          uri: http://jwt-user-cont:9000
+          predicates:
+            - Path=/user/insert, /user/updateInfo
+          filters:
+            - UserAndAdminFilter
+
+#        User-JWT microservice (for users and admins)
+        - id: microservice-user-jwt-auth
+          uri: http://jwt-user-cont:9000
+          predicates:
+            - Path=/auth/**
+          filters:
+            - UserAndAdminFilter
+    config:
+      enabled: false
+server:
+  port: 8080
+
+eureka:
+  instance:
+    instance-id: gateway
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+        http: DEBUG
