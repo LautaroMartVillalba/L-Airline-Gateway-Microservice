@@ -1,32 +1,16 @@
 spring:
-  main:
-    web-application-type: reactive
   cloud:
-    vault:
-      host: vault-custom
-      port: 8200
-      scheme: http
-      token: ${TOKEN}
-      authentication: TOKEN
-      kv:
-        backend: kv
-        default-context: database
-        application-name: database
-        enabled: true
-    loadbalancer:
-      ribbon:
-        enabled: false
     gateway:
       routes:
-#        Hotel microservice (for admins)
+#--------------------------HOTEL-------------------------
+#----------ADMINS
         - id: hotel-microservice-admins
           uri: lb://MICROSERVICE-HOTEL
           predicates:
             - Path=/hotel/insert, /hotel/delete, /hotel/update
           filters:
-          - AdminFilter
-
-#        Hotel microservice (for users and admins)
+            - AdminFilter
+#----------USERS
         - id: hotel-microservice-public
           uri: lb://MICROSERVICE-HOTEL
           predicates:
@@ -34,47 +18,55 @@ spring:
           filters:
             - UserAndAdminFilter
 
-#        Flight microservice (for admins)
+#--------------------------FLIGHT-------------------------
+#----------TICKETS-ADMINS
         - id: flight-microservice-admins
           uri: lb://MICROSERVICE-FLIGHT
           predicates:
-            - Path=/flight/insert, /flight/delete, /flight/update
+            - Path=/ticket/**
+          filters:
+            - AdminFilter
+#----------AIRPLANE-ADMINS
+        - id: flight-microservice-admins
+          uri: lb://MICROSERVICE-FLIGHT
+          predicates:
+            - Path=/airplane/**
+          filters:
+            - AdminFilter
+#----------AIRPORT-ADMINS
+        - id: flight-microservice-admins
+          uri: lb://MICROSERVICE-FLIGHT
+          predicates:
+            - Path=/airport/**
           filters:
             - AdminFilter
 
-#        Flight microservice (for users and admins)
-        - id: flight-microservice-public
-          uri: lb://MICROSERVICE-FLIGHT
-          predicates:
-            - Path=/flight/byId, /flight/byAirline, /flight/, /flight/byDestiny, /flight/bySchedule, /flight/byPrice
-          filters:
-            - UserAndAdminFilter
-
-#        User-JWT microservice (for admins)
+#--------------------------USER-JWT-------------------------
+#----------ADMINS
         - id: microservice-user-jwt-admins
-          uri: http://jwt-user-cont:9000
+          uri: lb://MICROSERVICE-USER-JWT
           predicates:
             - Path=/user/byId, /user/byEmail, /user/byName, /user/delete
           filters:
             - AdminFilter
-
-#        User-JWT microservice (for users and admins)
+#----------USERS
         - id: microservice-user-jwt-public
-          uri: http://jwt-user-cont:9000
+          uri: lb://MICROSERVICE-USER-JWT
           predicates:
             - Path=/user/insert, /user/updateInfo
           filters:
             - UserAndAdminFilter
-
-#        User-JWT microservice (for users and admins)
+#----------USERS
         - id: microservice-user-jwt-auth
-          uri: http://jwt-user-cont:9000
+          uri: lb://MICROSERVICE-USER-JWT
           predicates:
             - Path=/auth/**
           filters:
             - UserAndAdminFilter
     config:
       enabled: false
+  config:
+    import: vault://
 server:
   port: 8080
 
@@ -86,5 +78,7 @@ logging:
   level:
     org:
       springframework:
+        vault: DEBUG
         web: DEBUG
-        http: DEBUG
+        cloud:
+          vault: DEBUG
