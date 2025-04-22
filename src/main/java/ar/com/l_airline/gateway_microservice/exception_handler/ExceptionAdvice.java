@@ -7,6 +7,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -65,6 +66,15 @@ public class ExceptionAdvice {
         ExceptionDTO dto = ExceptionDTO.builder()
                 .code(HttpStatusCode.valueOf(404))
                 .message("Sorry! We're having problems with our server connection. Please try again later.").build();
+
+        return ResponseEntity.status(dto.getCode()).body(dto);
+    }
+
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    public ResponseEntity<ExceptionDTO> httpMessageNotReadableExHandler(){
+        ExceptionDTO dto = ExceptionDTO.builder()
+                .code(HttpStatusCode.valueOf(404))
+                .message("Invalid name. Check data.").build();
 
         return ResponseEntity.status(dto.getCode()).body(dto);
     }
