@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: microservice-gateway
   cloud:
     gateway:
       routes:
@@ -20,21 +22,21 @@ spring:
 
 #--------------------------FLIGHT-------------------------
 #----------TICKETS-ADMINS
-        - id: flight-microservice-admins
+        - id: flight-microservice-tickets
           uri: lb://MICROSERVICE-FLIGHT
           predicates:
             - Path=/ticket/**
           filters:
             - AdminFilter
 #----------AIRPLANE-ADMINS
-        - id: flight-microservice-admins
+        - id: flight-microservice-airplanes
           uri: lb://MICROSERVICE-FLIGHT
           predicates:
             - Path=/airplane/**
           filters:
             - AdminFilter
 #----------AIRPORT-ADMINS
-        - id: flight-microservice-admins
+        - id: flight-microservice-airports
           uri: lb://MICROSERVICE-FLIGHT
           predicates:
             - Path=/airport/**
