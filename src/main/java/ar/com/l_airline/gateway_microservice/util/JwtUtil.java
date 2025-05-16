@@ -1,6 +1,8 @@
 package ar.com.l_airline.gateway_microservice.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -20,7 +22,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(key);
     }
 
-    public void validateToken(String token) {
+    public void validateToken(String token) throws JwtException {
         Jwts.parser().verifyWith(getSingKey()).build().parseSignedClaims(token).getPayload();
     }
 
@@ -29,6 +31,15 @@ public class JwtUtil {
 
         String role = (String) claims.get("role");
         return role.matches("ADMIN");
+    }
+
+    public String getEmail(String token){
+        try {
+            Jwts.parser().verifyWith(getSingKey()).build().parseSignedClaims(token).getPayload();
+        }catch (ExpiredJwtException e){
+            return e.getClaims().getSubject();
+        }
+        return "No se ha encontrado payload.";
     }
 
 }
