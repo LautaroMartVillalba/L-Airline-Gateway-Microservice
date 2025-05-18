@@ -1,4 +1,4 @@
-package ar.com.l_airline.gateway_microservice.cookies;
+package ar.com.l_airline.gateway_microservice.internal_communication;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;

@@ -1,8 +1,8 @@
-package ar.com.l_airline.gateway_microservice.exception_handler;
+package ar.com.l_airline.gateway_microservice.exception_handling.controller_advice;
 
-import ar.com.l_airline.gateway_microservice.exception_handler.custom_exceptions.AccessDeniedException;
-import ar.com.l_airline.gateway_microservice.exception_handler.custom_exceptions.InvalidTokenException;
-import ar.com.l_airline.gateway_microservice.exception_handler.custom_exceptions.TokenExpiredException;
+import ar.com.l_airline.gateway_microservice.exception_handling.controller_advice.custom_exceptions.AccessDeniedException;
+import ar.com.l_airline.gateway_microservice.exception_handling.controller_advice.custom_exceptions.InvalidTokenException;
+import ar.com.l_airline.gateway_microservice.exception_handling.controller_advice.custom_exceptions.TokenExpiredException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatusCode;

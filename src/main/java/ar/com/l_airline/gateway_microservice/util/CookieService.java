@@ -1,4 +1,4 @@
-package ar.com.l_airline.gateway_microservice.cookies;
+package ar.com.l_airline.gateway_microservice.util;
 
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;

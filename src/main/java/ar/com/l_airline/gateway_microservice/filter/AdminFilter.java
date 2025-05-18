@@ -1,9 +1,8 @@
 package ar.com.l_airline.gateway_microservice.filter;
 
-import ar.com.l_airline.gateway_microservice.cookies.CookieService;
-import ar.com.l_airline.gateway_microservice.cookies.UserMicroserviceQueries;
-import ar.com.l_airline.gateway_microservice.exception_handler.custom_exceptions.AccessDeniedException;
-import ar.com.l_airline.gateway_microservice.exception_handler.custom_exceptions.InvalidTokenException;
+import ar.com.l_airline.gateway_microservice.util.CookieService;
+import ar.com.l_airline.gateway_microservice.internal_communication.UserMicroserviceQueries;
+import ar.com.l_airline.gateway_microservice.exception_handling.controller_advice.custom_exceptions.AccessDeniedException;
 import ar.com.l_airline.gateway_microservice.util.JwtUtil;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package ar.com.l_airline.gateway_microservice.handling;
+package ar.com.l_airline.gateway_microservice.exception_handling.generic_exception;
 
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
